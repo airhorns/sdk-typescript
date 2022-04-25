@@ -14,7 +14,7 @@ steps:
     artifact_paths:
       - 'docker-compose-logs/*'
     plugins:
-      - docker-compose#v3.8.0:
+      - docker-compose#v3.9.0:
           run: test-container
           upload-container-logs: always
           config:
@@ -32,7 +32,25 @@ steps:
     artifact_paths:
       - 'docker-compose-logs/*'
     plugins:
-      - docker-compose#v3.8.0:
+      - docker-compose#v3.9.0:
+          run: test-container
+          upload-container-logs: always
+          config:
+            - .buildkite/docker/docker-compose.yaml
+            - .buildkite/docker/docker-compose-ci.yaml
+
+  - label: 'nightly-stress'
+    timeout_in_minutes: 60
+    concurrency: 1
+    concurrency_group: 'sdk-typescript/nightly-stress'
+    commands:
+      - '.buildkite/docker/build.sh'
+      - 'npm run ci-stress'
+      - 'echo success'
+    artifact_paths:
+      - 'docker-compose-logs/*'
+    plugins:
+      - docker-compose#v3.9.0:
           run: test-container
           upload-container-logs: always
           config:
