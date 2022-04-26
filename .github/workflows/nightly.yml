@@ -30,16 +30,15 @@ jobs:
         with:
           repository: temporalio/docker-compose
           path: docker-compose
-        if: ${{ startsWith(matrix.os, 'ubuntu') }}
 
       - name: Start Temporal Server
         run: docker-compose up -d
         working-directory: docker-compose
-        if: ${{ startsWith(matrix.os, 'ubuntu') }}
 
       - name: Wait for Temporal Server
         run: npm run wait-namespace
-        if: ${{ startsWith(matrix.os, 'ubuntu') }}
       # end:docker-compose
 
-      - run: npm ci-stress
+      - run: npm run ci-stress
+        env:
+          TEMPORAL_TESTING_SERVER_URL: 'localhost:7233'
